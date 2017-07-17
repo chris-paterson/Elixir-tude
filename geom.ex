@@ -13,18 +13,13 @@ defmodule Geom do
 
   @spec area(atom(), number(), number()) :: number()
 
-  def area({shape, num1, num2}) do
-    area(shape, num1, num2)
+  def area(shape, num1, num2) when num1 >= 0 and num2 >= 0 do 
+    case shape do
+      :rectangle -> num1 * num2
+      :triangle -> num1 * num2 / 2
+      :ellipse -> :math.pi() * num1 * num2
+      _ -> 0
+    end
   end
-
-  defp area(:rectangle, length, width) when length >= 0 and width >= 0 do 
-    length * width
-  end
-  defp area(:triangle, base, height) when base >= 0 and height >= 0 do 
-    base * height / 2
-  end
-  defp area(:ellipse, major_radius, minor_radius) when major_radius >= 0 and minor_radius >= 0 do 
-    :math.pi * major_radius * minor_radius
-  end
-  defp area(_, _, _), do: 0
+  def area(_, _, _), do: 0
 end

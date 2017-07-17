@@ -22,4 +22,5 @@ defmodule Geom do
   def area(:ellipse, major_radius, minor_radius) when major_radius >= 0 and minor_radius >= 0 do 
     :math.pi * major_radius * minor_radius
   end
+  def area(_, _, _), do: 0
 end

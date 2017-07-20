@@ -1,5 +1,4 @@
 defmodule AskArea do
-  import Geom
   @moduledoc """
   Command line utility for finding the area of various shapes.
   """
@@ -16,8 +15,13 @@ defmodule AskArea do
 
   def area() do
     shape = get_shape()
-    inputs = get_dimensions("height", "width")
-    calculate(shape, inputs) |> IO.puts
+    {dimen1, dimen2} = case shape do
+      :rectangle -> get_dimensions("height", "width")
+      :triangle -> get_dimensions("base", "height")
+      :ellipse -> get_dimensions("major radius", "minor radius")
+      :unknown -> { shape, 0 }
+    end
+    calculate(shape, dimen1, dimen2) |> IO.puts
   end
 
   defp get_shape() do
@@ -33,7 +37,7 @@ defmodule AskArea do
       "r" -> :rectangle
       "t" -> :triangle
       "e" -> :ellipse
-      _ -> cancel "Unknown shape #{shape_char}"
+      _ -> :unknown
     end
   end
 
@@ -48,12 +52,11 @@ defmodule AskArea do
     String.to_integer(number)
   end
 
-  defp calculate(shape, inputs) do
-    x = elem(inputs, 0)
-    y = elem(inputs, 1)
+  defp calculate(shape, dimen1, dimen2) do
     cond do
-      x < 0 or y < 0 -> cancel "Both numbers must be greater than or equal to zero."
-      true -> Geom.area shape, x, y
+      shape == :unknown -> IO.puts("Unknown shape #{shape}")
+      dimen1 < 0 or dimen2 < 0 -> cancel "Both numbers must be greater than or equal to zero."
+      true -> Geom.area shape, dimen1, dimen2
     end
   end
 

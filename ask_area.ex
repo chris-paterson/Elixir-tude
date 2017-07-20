@@ -14,22 +14,23 @@ defmodule AskArea do
   """
 
   def area() do
-    shape = get_shape()
+    shape_char = get_shape_char()
+    shape = char_to_shape(shape_char)
+
     {dimen1, dimen2} = case shape do
       :rectangle -> get_dimensions("height", "width")
       :triangle -> get_dimensions("base", "height")
       :ellipse -> get_dimensions("major radius", "minor radius")
-      :unknown -> { shape, 0 }
+      :unknown -> { shape_char, 0 }
     end
     calculate(shape, dimen1, dimen2) |> IO.puts
   end
 
-  defp get_shape() do
+  defp get_shape_char() do
     shape = get_input "R)ectangle, T)riangle, or E)llipse: "
     shape
     |> String.first
     |> String.downcase
-    |> char_to_shape
   end
 
   defp char_to_shape(shape_char) do
@@ -54,7 +55,7 @@ defmodule AskArea do
 
   defp calculate(shape, dimen1, dimen2) do
     cond do
-      shape == :unknown -> IO.puts("Unknown shape #{shape}")
+      shape == :unknown -> IO.puts("Unknown shape #{dimen1}")
       dimen1 < 0 or dimen2 < 0 -> cancel "Both numbers must be greater than or equal to zero."
       true -> Geom.area shape, dimen1, dimen2
     end
